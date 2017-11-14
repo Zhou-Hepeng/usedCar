@@ -1,4 +1,5 @@
 let modal = weex.requireModule('modal')
+let dom = weex.requireModule('dom')
 let stream = weex.requireModule('stream')
 export default {
     methods: {
@@ -9,9 +10,14 @@ export default {
         },
         //请求地址
         ajaxUrl(){
-            let url = 'https://tao-api-test.m.360che.com'
+            //本地测试环境
+            let localUrl = 'http://z.taoshop.360che.com/v1/'
+            //开发环境
             let devUrl = 'https://product.360che.com'
-            return url
+            //线上正式环境
+            let url = 'https://tao-api-test.m.360che.com'
+            //返回
+            return localUrl
         },
         //封装get请求
         getData(url, callback){
@@ -34,10 +40,11 @@ export default {
         }
     },
     created() {
-        // //iconFont字体
-        // dom.addRule('fontFace', {
-        //     'fontFamily': 'detail',
-        //     'src': "url(\'https://at.alicdn.com/t/font_9uxuxvowyib5ipb9.woff\')"
-        // });
+        //iconFont字体
+        dom.addRule('fontFace', {
+            'fontFamily': 'icon',
+            'src': "url(\'https://at.alicdn.com/t/font_472583_4hnenff4r1vmquxr.woff\'),\
+                    url('https://at.alicdn.com/t/font_472583_4hnenff4r1vmquxr.ttf')"
+        });
     },
 }

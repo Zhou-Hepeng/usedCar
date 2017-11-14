@@ -9,5 +9,8 @@
 </style>
 
 <script>
-  
+  export default{
+  	created(){
+  	}
+  }
 </script>
