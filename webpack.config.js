@@ -80,7 +80,10 @@ const webConfig = {
       {
         test: /\.js$/,
         use: [{
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+             presets: ['es2015']
+          }
         }],
         exclude: /node_modules/
       },
