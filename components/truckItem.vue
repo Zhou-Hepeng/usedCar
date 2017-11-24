@@ -101,6 +101,7 @@
 
 <script>
 const navigator = weex.requireModule('navigator')
+const storage = weex.requireModule('storage')
 
 export default {
     data (){
@@ -111,7 +112,12 @@ export default {
     props: ['truckData'],
     methods: {
         jump (id){
-            this.goWeexUrl('http://www.baidu.com' + id);
+            storage.setItem('productId',id,ele => {
+                if(ele.result == 'success'){
+                    this.goWeexUrl('detail')
+                }
+            })
+            // this.goWeexUrl('http://www.baidu.com' + id);
         }
     }
 }

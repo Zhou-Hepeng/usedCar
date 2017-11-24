@@ -4,13 +4,13 @@
     <!-- 品牌 -->
     <div class="list-li">
       <text class="gray-title">品牌：</text>
-      <text class="text-info">徐工重工</text>
+      <text class="text-info">{{carInfoData.brand}}</text>
     </div>
     <!-- 车系 -->
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">车系：</text>
-      <text class="text-info">漢風G7</text>
+      <text class="text-info">{{carInfoData.series}}</text>
     </div>
     <!-- 车型 -->
     <div class="list-li">
@@ -22,70 +22,41 @@
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">上牌时间：</text>
-      <text class="text-info">1970年1月</text>
+      <text class="text-info">{{format(carInfoData.reg_date)}}</text>
     </div>
     <!-- 公里数 -->
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">公里数：</text>
-      <text class="text-info">2万公里</text>
+      <text class="text-info">{{carInfoData.mileage}}万公里</text>
     </div>
     <!-- 发动机品牌 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">发动机品牌：</text>
-      <text class="text-info">潍柴</text>
-    </div>
     <!-- 排放标准 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">排放标准：</text>
-      <text class="text-info">国五</text>
-    </div>
     <!-- 变速箱档位 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">变速箱档位：</text>
-      <text class="text-info">12档</text>
-    </div>
     <!-- 驱动形式 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">驱动形式：</text>
-      <text class="text-info">6x4</text>
-    </div>
     <!-- 马力 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">马力：</text>
-      <text class="text-info">430马力</text>
-    </div>
     <!-- 后桥速比 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">后桥速比：</text>
-      <text class="text-info">--请选择--</text>
-    </div>
+    <template v-for="item in carInfoData.configs">
+      <car-config :configs="item"></car-config>
+    </template>
     <!-- VIN码后六位 -->
-    <div class="list-li">
+    <!-- <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">VIN码后六位：</text>
       <text class="text-info">000000</text>
-    </div>
+    </div> -->
     <!-- 交强险过期时间 -->
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">交强险过期时间：</text>
-      <text class="text-info">2018年2月</text>
+      <text class="text-info">{{format(carInfoData.compulsory_expiry)}}</text>
     </div>
     <!-- 车辆描述 -->
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">车辆描述：</text>
-      <text class="text-info" v-if="!moreData">几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售</text>
-      <div class="text-area" v-else>
-        <textarea class="text-more-info" :value="textValue" disabled="true" rows="5"></textarea>
-      </div>
+      <text class="text-area" v-if="!moreData">几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售</text>
+      <text :class="['text-area', textMoreInfo]" v-else>几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售</text>
     </div>
     <div class="look-more" @click="lookMore">
       <text class="more">{{moreText}}</text>
@@ -99,7 +70,12 @@
 </template>
 
 <script>
+import CarConfig from './CarConfig.vue';
 export default {
+	props: ['carInfoData'],
+	components: {
+		CarConfig
+	},
 	data() {
 		return {
 			moreText: '查看更多',
@@ -110,13 +86,26 @@ export default {
 		arrowClass() {
 			return this.moreData ? 'up-arrow' : '';
 		},
-		textValue() {
-			return this.moreData
-				? '几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售'
-				: '';
+		textMoreInfo() {
+			return this.moreData ? 'text-more-info' : '';
 		}
 	},
 	methods: {
+		// ＜10 + 0
+		zero(m) {
+			return m < 10 ? '0' + m : m;
+		},
+		format(t) {
+			//t是整数，否则要parseInt转换
+			let time = new Date(t * 1000);
+			let y = time.getFullYear();
+			let m = time.getMonth() + 1;
+			let d = time.getDate();
+			let h = time.getHours();
+			let mm = time.getMinutes();
+			let s = time.getSeconds();
+			return `${y}年${this.zero(m)}月${this.zero(d)}`;
+		},
 		lookMore() {
 			this.moreData = !this.moreData;
 			this.moreData
@@ -169,18 +158,15 @@ export default {
     lines:2;
   }
   .text-area{
+    font-size: 28px;
     flex: 1;
+    text-overflow:ellipsis;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    lines:2;
   }
   .text-more-info{
-    width: 550px;
-    font-size: 28px;
-    color: #333;
-    text-align: left;
-    padding-top: 0px;
-    padding-bottom: 4px;
-    padding-left: 0px;
-    padding-right: 4px;
-
+    lines: 0;
   }
   .look-more{
     position: relative;

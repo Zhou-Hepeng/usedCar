@@ -66,7 +66,7 @@
     <!-- 地区选择 -->
     <location :location="location" :indexNav="indexNav" :locationShow="locationShow" @locationPop="locationPop" @selectLocation="selectLocation"></location>
     <!-- 搜索二手车 -->
-    <search :searchData="searchData" :searchShow="searchShow" @searchPop='searchPop' @screen="screen"></search>
+    <search :searchData="searchData" :searchShow="searchShow" @searchPop='searchPop'></search>
 
 		<!-- 筛选弹出层 -->
 		<div class="shadow" v-if="shadow" ref="shadow" @click="sidebarHide"></div>
@@ -309,8 +309,6 @@
 	      	//排序
 	      	sort:{id:''}
 	      },
-	      //详细搜索条件
-	      screenInfo:'',
 	      //是否确定排放和价格
 	      screenButton:false,
 	      //如果没有数据了，下拉加载不会请求
@@ -354,18 +352,8 @@
     			this.setCondition()
     			storage.removeItem('screen')
     		}else{
-
-    			// 查看是否有详细筛选条件
-    			storage.getItem('screenInfo',res => {
-    				if(res.result == 'success'){
-    					this.screenInfo = res.data
-		    			//直接请求数据
-		    			this.setCondition('init')
-    				}else{
-		    			//直接请求数据
-		    			this.setCondition('init')
-    				}
-    			})
+    			//直接请求数据
+    			this.getListData();
     		}
     	})
 
@@ -386,90 +374,82 @@
       })
     },
     methods:{
-    	// 点击sidebar 筛选条件
+    	// 点击sidebar
     	clickSidebar(type,item){
-
-    		//置空自定义筛选条件
-    		this.screenInfo = ''
 
     		//存储总发送对象
     		this.screenData[type] = item
 
-    		// //如果是价格和排放，那么return
+    		//如果是价格和排放，那么return
     		if(type == 'price' || type == 'discharge'){
     			return
     		}
-    		this.alert(1)
 
     		//存储筛选条件
     		this.setCondition()
     		//隐藏侧边栏
     		this.sidebarHide();
+    		this.alert(1)
     	},
     	//请求买车列表
-    	getListData(){
-    		let ajaxUrl = ''
-    		//如果有详细筛选条件
-    		if(!this.screenInfo){
-	    		ajaxUrl = `/weex/site/list?page=${this.page}&city=${this.locationInfo.id}`
+    	getListData(o){
+    		let ajaxUrl = `/weex/site/list?page=${this.page}&city=${this.locationInfo.id}`
 
-	    		//判断是否有筛选条件
-	    		if(this.condition.length){
-	    			ajaxUrl += '&key='
+    		//判断是否有筛选条件
+    		if(this.condition.length){
+    			ajaxUrl += '&key='
 
-	    			if(this.condition[0].id != 0){
-	    				ajaxUrl += 'c' + this.condition[0].id
-	    				if(this.condition[1].F_BrandId != 0){
-	    					ajaxUrl += '_b' + this.condition[1].F_BrandId
-	    				}
-	    			}else{
-	    				if(this.condition[1].F_BrandId != 0){
-	    					ajaxUrl += 'b' + this.condition[1].F_BrandId
-	    				}
+    			if(this.condition[0].id != 0){
+    				ajaxUrl += 'c' + this.condition[0].id
+    				if(this.condition[1].F_BrandId != 0){
+    					ajaxUrl += '_b' + this.condition[1].F_BrandId
+    				}
+    			}else{
+    				if(this.condition[1].F_BrandId != 0){
+    					ajaxUrl += 'b' + this.condition[1].F_BrandId
+    				}
+    			}
+
+    			let p = ''
+    			if(this.condition[2].id != 0){
+    				p += 'p' + this.condition[2].id
+    				if(this.condition[3].id != 0){
+    					p += '_' + this.condition[3].id
+    				}else{
+    					if(this.condition[4].id != 0){
+    						p += '_' + this.condition[4].id
+    					}
+    				}
+    			}else{
+    				if(this.condition[3].id != 0){
+    					p += 'p' + this.condition[3].id
+    					if(this.condition[4].id != 0){
+    						p += '_' + this.condition[4].id
+    					}
+    				}else{
+    					if(this.condition[4].id != 0){
+    						p += 'p' + this.condition[4].id
+    					}
+    				}
+    			}
+
+    			if(p != ''){
+	    			if(this.condition[0].id != 0 || this.condition[1].F_BrandId != 0){
+	    				ajaxUrl += '_'
 	    			}
+		    		ajaxUrl += p
+		    	}
 
-	    			let p = ''
-	    			if(this.condition[2].id != 0){
-	    				p += 'p' + this.condition[2].id
-	    				if(this.condition[3].id != 0){
-	    					p += '_' + this.condition[3].id
-	    				}else{
-	    					if(this.condition[4].id != 0){
-	    						p += '_' + this.condition[4].id
-	    					}
-	    				}
-	    			}else{
-	    				if(this.condition[3].id != 0){
-	    					p += 'p' + this.condition[3].id
-	    					if(this.condition[4].id != 0){
-	    						p += '_' + this.condition[4].id
-	    					}
-	    				}else{
-	    					if(this.condition[4].id != 0){
-	    						p += 'p' + this.condition[4].id
-	    					}
-	    				}
+
+	    		//查看是否有排序
+	    		if(this.condition[5].id != ''){
+	    			if(this.condition[0].id != 0 || this.condition[1].F_BrandId != 0 || p != ''){
+	    				ajaxUrl += '_'
 	    			}
-
-	    			if(p != ''){
-		    			if(this.condition[0].id != 0 || this.condition[1].F_BrandId != 0){
-		    				ajaxUrl += '_'
-		    			}
-			    		ajaxUrl += p
-			    	}
-
-
-		    		//查看是否有排序
-		    		if(this.condition[5].id != ''){
-		    			if(this.condition[0].id != 0 || this.condition[1].F_BrandId != 0 || p != ''){
-		    				ajaxUrl += '_'
-		    			}
-		    			ajaxUrl += this.condition[5].id
-		    		}
+	    			ajaxUrl += this.condition[5].id
 	    		}
-			}else{
-				ajaxUrl = `/weex/site/list?page=${this.page}&city=${this.locationInfo.id}&key=${encodeURI(this.screenInfo)}`
-			}
+    		}
+
     		this.alert(ajaxUrl)
     		//发送请求请求
 	      this.getData(ajaxUrl,ele => {
@@ -529,7 +509,7 @@
     			}
     		}
     		//存储筛选对象
-  			this.setCondition('init')
+  			this.setCondition()
     	},
     	//清除所有筛选条件
     	clearConditionAll(){
@@ -548,14 +528,14 @@
 	      	sort:{id:''}
 				}
     		//存储筛选对象
-  			this.setCondition('init')
+  			this.setCondition()
     	},
     	//存储筛选条件
-    	setCondition(init){
+    	setCondition(){
     		this.condition[0] = this.screenData.models
     		this.condition[1] = this.screenData.brand
     		this.condition[2] = this.screenData.source
-    		if(this.screenButton || init){
+    		if(this.screenButton){
 	    		this.condition[3] = this.screenData.price
 	    		this.condition[4] = this.screenData.discharge
     		}
@@ -568,7 +548,7 @@
   			this.notContent = false
 
   			//回滚到顶部
-      		// this.goTop();
+      	this.goTop();
 
     		//重置配置
     		this.page = 1
@@ -610,44 +590,44 @@
       		this.sort = true
       	}
 
-		let sidebar = this.$refs.sidebar;
-		animation.transition(sidebar,{
-			styles:{
-				transform: 'translate(0, 0)',
-				opacity: 1
-			},
-			duration:300,
-			timingFunction: 'ease-in-out',
-			needLayout:false,
-			delay:0,
-		},() => {
+				let sidebar = this.$refs.sidebar;
+				animation.transition(sidebar,{
+					styles:{
+						transform: 'translate(0, 0)',
+						opacity: 1
+					},
+					duration:300,
+   				timingFunction: 'ease-in-out',
+          needLayout:false,
+          delay:0,
+				},() => {
 
-		})
+				})
       },
       //隐藏侧边栏
       sidebarHide(){
 
-		let sidebar = this.$refs.sidebar;
-			animation.transition(sidebar,{
-				styles:{
-					transform: 'translate(750px, 0)',
-					opacity: 0
-				},
-				duration:300,
+				let sidebar = this.$refs.sidebar;
+				animation.transition(sidebar,{
+					styles:{
+						transform: 'translate(750px, 0)',
+						opacity: 0
+					},
+					duration:300,
    				timingFunction: 'ease-in-out',
-		          needLayout:false,
-		          delay:0,
-			},() => {
+          needLayout:false,
+          delay:0,
+				},() => {
 					//隐藏遮罩层
-		      		this.shadow = false
-		      		this.sidebarPop = false
-		      		//数据隐藏
-		    		this.source = false
-		    		this.models = false
-		    		this.brand = false
-		    		this.more = false
-		    		this.sort = false
-			})
+      		this.shadow = false
+      		this.sidebarPop = false
+	      	//数据隐藏
+	    		this.source = false
+	    		this.models = false
+	    		this.brand = false
+	    		this.more = false
+	    		this.sort = false
+				})
       },
       //选择地区
       selectLocation(ele){
@@ -660,11 +640,6 @@
             this.getListData();
           }
         })
-      },
-      //点击固定筛选条件
-      screen(item){
-        this.screenInfo = item.word
-        this.getListData();
       }
     }
   }

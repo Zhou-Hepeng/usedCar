@@ -1,7 +1,7 @@
 <template>
 	<div class="container" ref="searchPop">
 		<div class="search-bar">
-			<input type="text" class="search-input" placeholder="搜索二手车" ref="searchBox"/>
+			<input type="search" class="search-input" placeholder="搜索二手车" ref="searchBox"/>
 			<div class="cancal" @click="searchPop">
 				<text class="cancal-text">取消</text>
 			</div>
@@ -10,7 +10,7 @@
 			<text class="title">热门搜索</text>
 		</div>
 		<div class="options">
-			<div class="option" v-for="item in searchData">
+			<div class="option" v-for="item in searchData" @click="screen(item)">
 				<text class="option-text">{{item.word}}</text>
 			</div>
 		</div>
@@ -23,6 +23,10 @@
 		methods:{
 			searchPop(){
 				this.$emit('searchPop')
+			},
+			// 点击条件搜索
+			screen(item){
+				this.$emit('screen',item)
 			}
 		},
 		watch:{

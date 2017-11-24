@@ -30,7 +30,7 @@ export default {
         //跳入到weex页面
         goWeexUrl(url) {
             navigator.push({
-                url: 'http://192.168.1.196:8080/dist/' + url + '.js',
+                url: 'http://192.168.1.227:8080/dist/' + url + '.js',
                 animated: 'true'
             }, () => {
 
@@ -88,6 +88,10 @@ export default {
                     storage.setItem('toKen',ele.data.data.token)
                 }
             })
+        },
+        //拨打电话
+        goCall(phone){
+            thaw && thaw.onGoCall(phone);
         }
     },
     created() {

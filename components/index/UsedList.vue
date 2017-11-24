@@ -4,7 +4,7 @@
     <div class="used-content">
 		<!-- 二手货车论坛 -->
 		<div v-if="selected">
-	      <div class="list-li" v-for="(item, index) in forum.data">
+	      <div class="list-li" v-for="(item, index) in forum.data" @click="goUrl(item.url)">
 	        <text class="list-line" v-if="index !== 0"></text>
 	        <text class="li-title">{{item.subject}}</text>
 	        <div class="list-content">
@@ -19,7 +19,7 @@
 		</div>
 		<!-- 二手货车咨询 -->
 		<div v-if="!selected">
-	      <div class="list-li" v-for="(item, index) in news.data">
+	      <div class="list-li" v-for="(item, index) in news.data" @click="goUrl(item.url)">
 	        <text class="list-line" v-if="index !== 0"></text>
 	        <text class="li-title">{{item.Title}}</text>
 	        <div class="news-content">

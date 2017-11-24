@@ -3,25 +3,25 @@
     <image class="company-img" src="https://i.kcimg.cn/data/avatar/new/58/61c6701364994a3f811c06041d95c19a_big.jpg-80x80.jpg"></image>
     <div class="header-content">
       <div class="shop-title">
-        <text class="shop-name">江西xxxx江西xxxx江西xxxx江西xxxx江西xxxx</text>
+        <text class="shop-name">{{shopInfo.company_name}}</text>
         <text class="shop-type">商家</text>
         <image class="shop-vip" src="https://tao.m.360che.com/m/images/vip.png"></image>
         <image class="shop-protect" src="https://tao.m.360che.com/m/images/bao.png"></image>
       </div>
       <div class="company-name">
         <text class="gray">公司名称：</text>
-        <text class="name">江西瑞州汽运集团久鼎汽运有限公司</text>
+        <text class="name">{{shopInfo.licence_company}}</text>
       </div>
       <div class="company-concat">
         <text class="gray">联系人：</text>
-        <text class="name">冷锦龙</text>
+        <text class="name">{{shopInfo.realname}}</text>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-	props: ['goodsInfo'],
+	props: ['shopInfo'],
 	data: () => ({})
 };
 </script>
@@ -30,7 +30,13 @@ export default {
     background-color: #fff;
     flex-direction: row;
     align-items: center;
-    padding: 48px 30px 36px;
+    padding-top:48px;
+    padding-left:30px;
+    padding-bottom:36px;
+    padding-right:30px;
+    border-bottom-width:20px;
+    border-bottom-style: solid;
+    border-bottom-color: #f5f5f5;
   }
   .company-img{
     width: 160px;
@@ -67,7 +73,10 @@ export default {
     line-height: 24px;
     margin-left: 10px;
     margin-right: 8px;
-    padding: 4px 8px;
+    padding-top: 4px;
+    padding-bottom:4px;
+    padding-left:8px;
+    padding-right:8px;
     color: #904208;
     background-color: #ffdd62;
   }

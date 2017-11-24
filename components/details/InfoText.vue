@@ -3,33 +3,33 @@
     <!-- 标题编号 -->
     <div class="front">
       <div class="front-info">
-        <text class="car-text">xxxxxxxxx</text>
+        <text class="car-text">{{detailData.title}}</text>
         <div class="status">
           <!-- 标签 -->
-          <text class="user-type">经纪人</text>
+          <text class="user-type">{{identity}}</text>
           <image class="shop-vip" src="https://tao.m.360che.com/m/images/vip.png"></image>
           <image class="shop-protect" src="https://tao.m.360che.com/m/images/bao.png"></image>
-          <text class="car-code">车源编号：sdafdsafdsaf</text>
+          <text class="car-code">车源编号：{{detailData.code}}</text>
         </div>
         <text class="list-line"></text>
       </div>
       <!-- 热度 -->
       <div class="hot-info">
         <text class="hot-title">热度指数</text>
-        <text class="hot-num">262</text>
+        <text class="hot-num">{{hot}}</text>
       </div>
     </div>
     <!-- 售价 -->
     <div class="price">
       <div class="sail-price">
         <text class="price-title">售价：</text>
-        <text class="price-num">5.00万</text>
+        <text class="price-num">{{detailData.price}}万</text>
          <!-- v-if="infoData.price_reduce === 'yes'" -->
-        <image class="price-down" src="https://s.kcimg.cn/wap/images/used-car/cutdown.png"></image>
+        <image class="price-down" v-if="detailData.price_reduce === 'yes'" src="https://s.kcimg.cn/wap/images/used-car/cutdown.png"></image>
       </div>
-      <div class="loan">
+      <div class="loan" v-if="detailData.pay_instalments === 'support'">
         <text class="icon-loan">贷</text>
-        <text class="first-loan">首付10万起</text>
+        <text class="first-loan">首付{{detailData.down_payment}}万起</text>
       </div>
     </div>
   </div>
@@ -37,20 +37,33 @@
 
 <script>
 export default {
-	// props: ['infoData']
+	props: ['detailData', 'hot'],
+	computed: {
+		identity() {
+			let i;
+			if (this.detailData.publisher === 1) {
+				i = '个人';
+			} else if (this.detailData.publisher === 2) {
+				i = '经纪人';
+			} else if (this.detailData.publisher === 3) {
+				i = '商家';
+			}
+			return i;
+		}
+	}
 };
 </script>
 
 <style scoped>
   .info{
     width: 750px;
-    height: 250px;
+    min-height: 250px;
     background-color: #fff;
   }
   .front{
     position: relative;
     flex-direction: row;
-    height: 150px;
+    min-height: 150px;
     padding-top: 24px;
     padding-bottom: 24px;
     padding-left: 30px;

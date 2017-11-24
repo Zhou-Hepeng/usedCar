@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <scroller style="flex: 1">
-      <detail-slider :photos="detailData.photos"></detail-slider>
-      <info-text :detailData="detailData" :hot="hotData" v-if="detailData"></info-text>
-      <car-info :carInfoData="detailData" v-if="detailData"></car-info>
-      <sail-info :seller="detailData.seller" v-if="detailData.seller"></sail-info>
+      <detail-slider></detail-slider>
+      <info-text></info-text>
+      <car-info></car-info>
+      <sail-info></sail-info>
     </scroller>
     <div class="concat" @click="concatToSailer">
       <text class="sailer">联系卖家</text>
@@ -15,7 +15,6 @@
 <script>
 import mixins from '../mixins/mixins';
 Vue.mixin(mixins);
-const storage = weex.requireModule('storage');
 import DetailSlider from '../components/details/DetailSlider.vue';
 import InfoText from '../components/details/InfoText.vue';
 import CarInfo from '../components/details/CarInfo.vue';
@@ -28,33 +27,9 @@ export default {
 		CarInfo,
 		SailInfo
 	},
-	data: () => {
-		return {
-			detailData: [],
-			id: '',
-			hotData: ''
-		};
-	},
-	created() {
-		storage.getItem('productId', ele => {
-			if (ele.result == 'success') {
-				this.id = ele.data;
-				//获取详情
-				this.fetch();
-			}
-		});
-	},
 	methods: {
-		fetch() {
-			this.getData(`/weex/truck/detail?id=${this.id}`, res => {
-				let data = res.data.data;
-				this.detailData = data;
-				this.hotData = data.statistics.hot;
-			});
-		},
 		concatToSailer() {
 			this.alert('联系卖家');
-			// weex.requireModule('THAW').onGoCall();
 		}
 	}
 };

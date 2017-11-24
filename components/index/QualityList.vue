@@ -2,18 +2,18 @@
   <div class="quality">
     <list-nav :leftTitle="leftTitle" :rightTitle="rightTitle" :selected="selected" @clickLeft="chooseLeft" @clickRight="chooseRight"></list-nav>
     <div class="quality-content">
-      <div class="list-li" v-if="selected" v-for="(item, index) in seller">
+      <div class="list-li" v-if="selected" v-for="(item, index) in seller" @click="goShop(item)">
         <text class="list-line" v-if="index !== 0"></text>
         <text class="li-title">{{item.company_name}}</text>
-        <div class="list-content" @click="goWeexUrl('shop')">
+        <div class="list-content" @click="goWeexUrl('detail')">
           <text class="li-to-store" @>进入店铺</text>
           <text class="li-arrow" :style="{fontFamily:'icon',fontSize:'24px'}">&#xe60d;</text>
         </div>
       </div>
-      <div class="list-li" v-if="!selected" v-for="(item, index) in intermediary">
+      <div class="list-li" v-if="!selected" v-for="(item, index) in intermediary" @click="goShop(item)">
         <text class="list-line" v-if="index !== 0"></text>
         <text class="li-title">{{item.company_name}}</text>
-        <div class="list-content" @click="goWeexUrl('shop')">
+        <div class="list-content">
           <text class="li-to-store">进入店铺</text>
           <text class="li-arrow" :style="{fontFamily:'icon',fontSize:'24px'}">&#xe60d;</text>
         </div>
@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+let storage = weex.requireModule('storage')
 import ListNav from './ListNav.vue';
 export default {
   props:['seller','intermediary'],
@@ -33,32 +34,32 @@ export default {
 		rightTitle: '优质经纪人',
 		selected: true,
 		// seller: [
-		// 	{
-		// 		company_name: '济宁青汇运输有限公司'
-		// 	},
-		// 	{
-		// 		company_name: '济宁青汇运输有限公司'
-		// 	},
-		// 	{
-		// 		company_name: '济宁青汇运输有限公司'
-		// 	},
-		// 	{
-		// 		company_name: '济宁青汇运输有限公司'
-		// 	}
-		// ],
-		// intermediary: [
-		// 	{
-		// 		company_name: 'xxxx'
-		// 	},
-		// 	{
-		// 		company_name: 'xxxx'
-		// 	},
-		// 	{
-		// 		company_name: 'xxxx'
-		// 	},
-		// 	{
-		// 		company_name: 'xxxx'
-		// 	}
+  		// 	{
+  		// 		company_name: '济宁青汇运输有限公司'
+  		// 	},
+  		// 	{
+  		// 		company_name: '济宁青汇运输有限公司'
+  		// 	},
+  		// 	{
+  		// 		company_name: '济宁青汇运输有限公司'
+  		// 	},
+  		// 	{
+  		// 		company_name: '济宁青汇运输有限公司'
+  		// 	}
+  		// ],
+  		// intermediary: [
+  		// 	{
+  		// 		company_name: 'xxxx'
+  		// 	},
+  		// 	{
+  		// 		company_name: 'xxxx'
+  		// 	},
+  		// 	{
+  		// 		company_name: 'xxxx'
+  		// 	},
+  		// 	{
+  		// 		company_name: 'xxxx'
+  		// 	}
 		// ]
 	}),
 	methods: {
@@ -68,6 +69,15 @@ export default {
     chooseRight() {
       this.selected = false
     },
+    //进入店铺页面
+    goShop(item){
+      //存储店铺信息
+      storage.setItem('shopInfo',JSON.stringify(item),ele => {
+        if(ele.result == 'success'){
+          this.goWeexUrl('shop')
+        }
+      })
+    }
 	}
 };
 </script>

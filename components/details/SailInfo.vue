@@ -4,13 +4,13 @@
     <!-- 卖家联系方式 -->
     <div class="list-li">
       <image class="user-img" src="https://i.kcimg.cn/data/avatar/new/17/1757e1a63938378423be2d1098ffb207_big.jpg-80x80.jpg"></image>
-      <text class="user-name">asfdasfdasfdsaf</text>
+      <text class="user-name">{{seller.name}}</text>
     </div>
     <!-- 带标签的联系方式 -->
     <div class="list-li">
       <div class="li-front">
         <image class="user-img" src="https://i.kcimg.cn/data/avatar/new/17/1757e1a63938378423be2d1098ffb207_big.jpg-80x80.jpg"></image>
-        <text class="user-name">asfdasfdasfdsaf</text>
+        <text class="user-name">{{seller.name}}</text>
         <div class="status">
           <!-- 标签 -->
           <text class="user-type">经纪人</text>
@@ -27,7 +27,7 @@
     <div class="list-li">
       <text class="list-line"></text>
       <text class="gray-title">联系人：</text>
-      <text class="concat">asdfdsafdsafdsafdsaf</text>
+      <text class="concat">{{seller.name}}</text>
     </div>
 
     <!-- 带标签联系人 -->
@@ -39,24 +39,24 @@
       </div>
       <div class="user-concat">
         <text class="gray-title">联系人：</text>
-        <text class="concat">asdfdsafdsafdsafdsaf</text>
+        <text class="concat">{{seller.name}}</text>
       </div>
     </div>
 
     <!-- 点击拨打电话和复制微信号按钮 -->
     <div class="concat-btn">
       <text class="list-line"></text>
-      <div class="btn left-btn" @click="telPhone">
+      <div class="btn left-btn" @click="telPhone" v-if="seller.mobile && seller.mobile !== null">
         <div class="concat-phone">
           <text class="icon-phone" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe689;</text>
-          <text class="phone">13446632067</text>
+          <text class="phone">{{seller.mobile}}</text>
         </div>
         <text class="ascription">归属地：</text>
       </div>
-      <div class="btn right-btn" @click="copyInfo">
+      <div class="btn right-btn" @click="copyInfo" v-if="seller.wechat_id && seller.wechat_id !== null">
         <div class="wx-concat">
           <text class="icon-wx" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe60f;</text>
-          <text class="wx-number">13795978018</text>
+          <text class="wx-number">{{seller.wechat_id}}</text>
         </div>
         <text class="wx-copy">点击复制</text>
       </div>
@@ -68,6 +68,7 @@
 const clipboard = weex.requireModule('clipboard');
 const modal = weex.requireModule('modal');
 export default {
+	props: ['seller'],
 	methods: {
 		goShop() {
 			// 进店看看

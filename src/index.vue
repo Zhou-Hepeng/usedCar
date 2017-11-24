@@ -25,7 +25,7 @@
         <text class="footer-bar-icon" :style="{fontFamily:'icon',fontSize:'32px'}">&#xe697;</text>
         <text class="footer-bar-text">首页</text>
       </div>
-      <div class="menu">
+      <div class="menu" @click="sellCar('sellCar')">
         <text class="footer-bar-icon" :style="{fontFamily:'icon',fontSize:'32px'}">&#xe69a;</text>
         <text class="footer-bar-text">卖车</text>
       </div>
@@ -42,7 +42,7 @@
     <!-- 地区选择 -->
     <location :location="location" :indexNav="indexNav" :locationShow="locationShow" @locationPop="locationPop" @selectLocation="selectLocation"></location>
     <!-- 搜索二手车 -->
-    <search :searchData="searchData" :searchShow="searchShow" @searchPop='searchPop'></search>
+    <search :searchData="searchData" :searchShow="searchShow" @searchPop='searchPop' @screen="screen"></search>
 
   </div>
 </template>
@@ -132,11 +132,32 @@
             this.locationShow = false
           }
         })
+      },
+      //点击固定筛选条件
+      screen(item){
+        storage.setItem('screenInfo',item.word,ele => {
+          if(ele.result == 'success'){
+            this.goWeexUrl('buyCar')
+          }
+        })
+      },
+      // 点击跳转卖车页面
+      sellCar(){
+        storage.getItem('userInfo',ele => {
+          if(ele.result == 'success'){
+            let userInfo = JSON.parse(ele.data)
+            if(userInfo.allowPublish == true){
+              this.goWeexUrl('cellCar')
+            }else{
+              this.alert(userInfo.allowPublish)
+            }
+          }
+        })
       }
     },
     created(){
       //请求toKen
-      this.getToKen()
+      // this.getToKen()
       //查看是否有选中地区
       storage.getItem('location',res => {
         if (res.result === 'success') {
@@ -157,7 +178,9 @@
           this.intermediary = ele.data.data.intermediary
           //二手货车 & 论坛
           this.forum = ele.data.data.forum
+          console.log(this.forum,'this.forum')
           this.news = ele.data.data.news
+          console.log(this.news,'this.news')
         }
       })
       //请求最新二手车列表
