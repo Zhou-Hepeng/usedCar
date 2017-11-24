@@ -21,7 +21,7 @@ function getEntryFileContent(entryPath, vueFilePath) {
   }
   contents += 'var App = require(\'' + relativePath + '\')\n';
   contents += 'App.el = \'#root\'\n';
-  contents += 'new Vue(App)\n';
+  contents += 'export default new Vue(App)\n';
   return contents;
 }
 
@@ -80,10 +80,7 @@ const webConfig = {
       {
         test: /\.js$/,
         use: [{
-          loader: 'babel-loader',
-          options: {
-             presets: ['es2015']
-          }
+          loader: 'babel-loader'
         }],
         exclude: /node_modules/
       },
