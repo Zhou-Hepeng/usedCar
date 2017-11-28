@@ -1,5 +1,6 @@
 <template>
   <div class="shop-item-con">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <my-goback :title="shopInfo.company_name"></my-goback>
     <scroller class="list" @loadmore="getList" loadmoreoffset="10">
       <header-info :shopInfo="shopInfo"></header-info>

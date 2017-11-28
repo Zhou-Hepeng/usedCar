@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <scroller style="flex: 1">
       <detail-slider :photos="photoData"  v-if="photoData"></detail-slider>
       <info-text :detailData="detailData"></info-text>

@@ -1,5 +1,6 @@
 <template>
   <div class="personal">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <my-goback :title="title"></my-goback>
     <div class="form-data">
       <div class="list-li">

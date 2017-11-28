@@ -21,7 +21,7 @@
 					<div class="info" v-for="city in cityDate[provinceIndex].children" :ref="city.text"><text>{{city.text}}</text></div>
 					<div class="seat"></div>
 				</scroller>
-				<scroller class="wrapper" @scroll="selectProvince($event,'county')" show-scrollbar="false" offset-accuracy="10" @touchend="provinceEnd('county')">
+				<scroller v-if="!notCounty" class="wrapper" @scroll="selectProvince($event,'county')" show-scrollbar="false" offset-accuracy="10" @touchend="provinceEnd('county')">
 					<div class="seat" ref="countyTop"></div>
 					<div class="info" v-for="county in cityDate[provinceIndex].children[cityIndex].children" :ref="county.text"><text>{{county.text}}</text></div>
 					<div class="seat"></div>
@@ -73,7 +73,7 @@
   right:0;
   bottom:0;
   top:0;
-  background-color:rgba(0,0,0,.6);
+  background-color:rgba(0,0,0,.4);
 }
 .visible{
 	left:0;
@@ -85,7 +85,7 @@
 	bottom:0;
 	height:480px;
 	background-color:#eee;
-	/*transform: translateY(500px),*/
+	transform: translateY(500px),
 }
 .buttons{
 	height:80px;
@@ -144,9 +144,9 @@
 
 let dom = weex.requireModule('dom')
 let animation = weex.requireModule('animation')
-import cityDate from '../components/city.data-3.js'
+import cityDate from './city.data-3.js'
 	export default {
-		props:['pickShow'],
+		props:['pickShow','notCounty'],
 		data(){
 			return {
 				//总数据
@@ -154,13 +154,15 @@ import cityDate from '../components/city.data-3.js'
 				//滚动的距离
 				deviation:'',
 				//省份数据的下标
-				provinceIndex:3,
+				provinceIndex:0,
 				//城市数据的下标
 				cityIndex:0,
 				//县数据的下标
 				countyIndex:0,
+				//延迟计算
 				time:false,
-				shadeShow:true,
+				//遮罩层
+				shadeShow:false,
 				locationInfo:{
 					province:{
 						value: '',
@@ -200,7 +202,7 @@ import cityDate from '../components/city.data-3.js'
 					let name = ''
 					let o = {}
 					if(type == 'province'){
-						let provinceInfo = cityDate[this[type + 'Index']]
+						let provinceInfo = cityDate[this.provinceIndex]
 						name = this.$refs[provinceInfo.text]
 						//重置城市和县的数据
 						this.cityIndex = 0;
@@ -210,12 +212,13 @@ import cityDate from '../components/city.data-3.js'
 		      	dom.scrollToElement(cityTop, {offset: -50})
 						let countyTop = this.$refs.countyTop;
 		      	dom.scrollToElement(countyTop, {offset: -50})
-		      	//存储选择城市信息
-		      	o.text = provinceInfo.text
-		      	o.value = provinceInfo.value
-		      	//清除市 && 县信息
-		      	this.locationInfo['city'] = {}
-		      	this.locationInfo['county'] = {}
+		      	// //存储选择城市信息
+		      	// o.text = provinceInfo.text
+		      	// o.value = provinceInfo.value
+		      	// //重置市 && 县为默认信息
+		      	// this.locationInfo['city'].value = cityDate[this.provinceIndex].children[this.cityIndex].value
+		      	// this.locationInfo['city'].text = cityDate[this.provinceIndex].children[this.cityIndex].text
+		      	// this.locationInfo['county'] = {}
 					}else if(type == 'city'){
 						let cityInfo = cityDate[this.provinceIndex].children[this.cityIndex]
 						name = this.$refs[cityInfo.text]
@@ -224,20 +227,20 @@ import cityDate from '../components/city.data-3.js'
 						//重置县的偏移量
 						let countyTop = this.$refs.countyTop;
 		      	dom.scrollToElement(countyTop, {offset: -50})
-		      	//存储选择城市信息
-		      	o.text = cityInfo.text
-		      	o.value = cityInfo.value
+		      	// //存储选择城市信息
+		      	// o.text = cityInfo.text
+		      	// o.value = cityInfo.value
 		      	//清除县信息
-		      	this.locationInfo['county'] = {}
+		      	// this.locationInfo['county'] = {}
 					}else{
 						let countyInfo = cityDate[this.provinceIndex].children[this.cityIndex].children[this.countyIndex]
 						name = this.$refs[countyInfo.text]
-		      	//存储选择城市信息
-		      	o.text = countyInfo.text
-		      	o.value = countyInfo.value
+		      	// //存储选择城市信息
+		      	// o.text = countyInfo.text
+		      	// o.value = countyInfo.value
 					}
-					//赋值地区信息
-					this.locationInfo[type] = o
+					//设置详细选择地区信息
+					this.setLocationInfo();
 
 		      dom.scrollToElement(name[0], {offset: -150})
 					clearTimeout(this.time)
@@ -250,11 +253,30 @@ import cityDate from '../components/city.data-3.js'
 			},
 			//确定城市选择
 			submitLocation(){
+				//设置详细选择地区信息
+				this.setLocationInfo();
 				this.$emit('submitLocation',this.locationInfo)
-			}
+			},
+			// 设置地区
+			setLocationInfo(){
+				//赋值地区信息
+				this.locationInfo = {
+					province:{
+						value: cityDate[this.provinceIndex].value,
+						text: cityDate[this.provinceIndex].text,
+					},
+					city:{
+						value: cityDate[this.provinceIndex].children[this.cityIndex].value,
+						text: cityDate[this.provinceIndex].children[this.cityIndex].text,
+					},
+					county:{
+						value: cityDate[this.provinceIndex].children[this.cityIndex].children[this.countyIndex].value,
+						text: cityDate[this.provinceIndex].children[this.cityIndex].children[this.countyIndex].text,
+					}
+				}
+			},
 		},
 		created(){
-
 		},
 		watch:{
 			pickShow(){

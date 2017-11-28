@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <my-goback :title="'我的车辆'"></my-goback>
     <div class="nav">
       <text :class="['prev', firstClass]" @click="firstNav">审核中（0）</text>

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <my-goback :title="'浏览历史'" :history="clearButton" @clearItem='clearItem'></my-goback>
     <scroller style="flex: 1;background-color:#f5f5f5;">
       <!-- 没有历史记录 -->

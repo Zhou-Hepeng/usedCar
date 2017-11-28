@@ -6,12 +6,18 @@ const stream = weex.requireModule('stream')
 const animation = weex.requireModule('animation')
 const storage = weex.requireModule('storage')
 const picker = weex.requireModule('picker');
+let globalEvent = weex.requireModule('globalEvent');
 export default {
     methods: {
         alert(text) {
             modal.alert({
                 message: JSON.stringify(text)
             })
+        },
+        topBarShow(){
+            if(weex.config.env.platform == 'iOS'){
+                return true
+            }
         },
         showConfirm (callback,name="确定删除吗？") {
           console.log('will show confirm')
@@ -31,7 +37,7 @@ export default {
         //跳入到weex页面
         goWeexUrl(url) {
             navigator.push({
-                url: 'http://192.168.1.186:8080/dist/' + url + '.js',
+                url: 'http://192.168.1.241:8080/dist/' + url + '.js',
                 animated: 'true'
             }, () => {
 
@@ -107,6 +113,15 @@ export default {
             }
           })
         },
+        //登录
+        goLogin(callback){
+            thaw && thaw.onGoLogin();
+            globalEvent && globalEvent.addEvenetListener('onLoginCallback',function(data){
+                this.alert(2)
+                this.alert(data)
+                callback(data)
+            })
+        }
     },
     created() {
         //iconFont字体

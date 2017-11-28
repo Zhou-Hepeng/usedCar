@@ -1,5 +1,6 @@
 <template>
 	<div class="container">
+      <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
       <div class="search-bar">
           <div class="location" @click="locationPop">
               <text class="location-icon" :style="{fontFamily:'icon',color:'#666',fontSize:'24px'}">&#xe619;</text>

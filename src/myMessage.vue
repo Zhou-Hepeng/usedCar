@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
       <my-goback :title="'我的消息'" :history="true" @clearItem='clearItem'></my-goback>
       <scroller style="flex: 1">
         <div class="no-info" v-if="notMessageList">

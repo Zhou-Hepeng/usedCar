@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
         <MyGoback title="商家申请-类型选择"></MyGoback>
         <div class="apply-container">
             <div class="apply-choose" @click="goWeexUrl('intermediaryApply')">

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="topBarShow" v-if="topBarShow" style="height:40px;background-color:#fff"></div>
     <div class="container" v-if="myCollectionData === null">
       <my-goback :title="'我的收藏'"></my-goback>
       <scroller style="flex: 1">

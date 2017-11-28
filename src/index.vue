@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="background-color:red">
     <scroller style="flex:1">
       <!-- 轮播图 -->
       <carousel :carouselData="carouselData" @locationPop="locationPop" @searchPop="searchPop" :locationInfo="locationInfo"></carousel>
@@ -48,7 +48,7 @@
 </template>
 
 <style scoped>
-.container{flex:1;height:100%;background-color: #fff}
+.container{flex:1;background-color: #fff}
 .footer-bar{height:100px;flex-direction: row;background-color: #f5f5f5;}
 .menu{flex:1;justify-content: center;align-items: center;}
 .footer-bar-icon{color:#ccbbb8;font-family: 'icon';font-size: 36px}
