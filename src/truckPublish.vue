@@ -10,6 +10,7 @@
             <text class="form-title">车辆基本信息</text>
             <div class="form-box flex"> 
                 <text class="label">标题</text>
+                <text class="must">*</text>
                 <input
                 	class="input box-flex text-right ml"
                 	type="text"
@@ -21,21 +22,25 @@
             </div>
             <div class="form-box flex" @click="toggleFixed(true, 'cat_id')">
                 <text class="label">选择车型分类</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right">{{cat_id_name}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <div class="form-box flex" @click="toggleFixed(true, 'brand_id')">
                 <text class="label">选择品牌</text>
+                <text class="must" v-if="formData.cat_id != 100001">*</text>
                 <text class="input box-flex text-right">{{brand_id_name}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <div class="form-box flex" @click="toggleFixed(true, 'series_id')">
                 <text class="label">选择车系</text>
+                <text class="must" v-if="formData.cat_id != 100001">*</text>
                 <text class="input box-flex text-right">{{series_id_name}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <div class="form-box flex">
                 <text class="label">车辆所在地</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
@@ -53,6 +58,7 @@
             </div>
             <div class="form-box flex">
                 <text class="label">全款价格</text>
+                <text class="must">*</text>
                 <input
                 	class="input box-flex text-right ml"
                 	type="tel"
@@ -65,6 +71,7 @@
             </div>
             <div class="form-box form-box-small flex">
                 <text class="label">是否支持分期</text>
+                <text class="must" v-if="switchType">*</text>
                 <input  
                     :disabled="!switchType"
                     class="input box-flex text-right ml"
@@ -80,36 +87,42 @@
             </div>
             <div class="form-box flex">
                 <text class="label">上牌时间</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <div class="form-box flex no-border">
                 <text class="label">交强险过期时间</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <text class="form-title" v-if="truckType.length > 0">车辆主要参数</text>
             <!-- attr_1 -->
-            <div class="form-box flex" v-if="truckType.indexOf('attr_1') !== -1" @click="toggleFixed(true)">
+            <div class="form-box flex" v-if="truckType.indexOf('attr_1') !== -1" @click="toggleFixed(true, 'attr_1')">
                 <text class="label">发动机品牌</text>
-                <text class="input box-flex text-right">{{formData.attr_1}}</text>
+                <text class="must">*</text>
+                <text class="input box-flex text-right">{{attr_1_name}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <!-- attr_2 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_2') !== -1" @click="toggleFixed(true, 'attr_2')">
                 <text class="label">排放标准</text>
-                <text class="input box-flex text-right">{{formData.attr_2}}</text>
+                <text class="must">*</text>
+                <text class="input box-flex text-right">{{attr_2_name}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <!-- attr_3 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_3') !== -1" @click="toggleFixed(true, 'attr_3')">
                 <text class="label">变速箱档位</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right">{{formData.attr_3}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <!-- attr_4 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_4') !== -1" @click="toggleFixed(true, 'attr_4')">
                 <text class="label">驱动形式</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right">{{formData.attr_4}}</text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
@@ -129,6 +142,7 @@
             <!-- attr_6 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_6') !== -1">
                 <text class="label">马力</text>
+                <text class="must">*</text>
                 <input
                 	class="input box-flex text-right ml"
                 	type="tel"
@@ -142,6 +156,7 @@
             <!-- attr_7 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_7') !== -1">
                 <text class="label">货箱长度</text>
+                <text class="must">*</text>
                 <input
                 	class="input box-flex text-right ml"
                 	type="tel"
@@ -187,18 +202,21 @@
             <!-- attr_11 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_11') !== -1" @click="toggleFixed(true, 'attr_11')">
                 <text class="label">挂车型号</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <!-- attr_12 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_12') !== -1" @click="toggleFixed(true, 'attr_12')">
                 <text class="label">轴数</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
             <!-- attr_13 -->
             <div class="form-box flex" v-if="truckType.indexOf('attr_13') !== -1" @click="toggleFixed(true, 'attr_13')">
                 <text class="label">悬挂形式</text>
+                <text class="must">*</text>
                 <text class="input box-flex text-right"></text>
                 <text class="icon" :style="iconSize">&#xe604;</text>
             </div>
@@ -285,6 +303,8 @@
 const animation = weex.requireModule('animation')
 const modal = weex.requireModule('modal')
 
+const accessToken = "kFQowJN83opf4kdSlVdNK4eCaCKRaFGnYf+5C8BBBjLgQyiXBqypObCNC5iRXX/bjP/NZoPCFbP27i3DZ/3x4FSrK1U4MsbPWrfjOuGFOpPn9sS+bNHFcm2SV9worJ6reKpeAZaxrtF9mctdT+W4/BYrt9frPYzgmk+xnNAyGDVCZRqQ4KsaPJ4QamZr+40bP3Gn6grRCESePzwQx/G3chO5xQboR7bHnaqeZdbGXbJ4aYHobA+RYpHd1WDrO1fxSftYgZciorK9kAFbUkef0ZzNeB7PMhlkpQwWLaNOC3j0x8Oh";
+
 import mixins from '../mixins/mixins'
 Vue.mixin(mixins)
 
@@ -324,13 +344,16 @@ export default {
                 data: null,
                 letter: false
             },
+            mustNameArr: ['cat_id', 'brand_id', 'series_id', 'attr_1', 'attr_2'],
             // 文字显示
             cat_id_name: null,
             brand_id_name: null,
             series_id_name: null,
+            attr_1_name: null,
+            attr_2_name: null,
             // 提交表单
             formData: {
-                photos: [], // 图片数组
+                photos: [], // 图片aid数组
                 title: null, // 标题
                 cat_id: null, // 车型
                 brand_id: null, // 品牌
@@ -399,11 +422,40 @@ export default {
             }
             this.submitActive = 'active';
             // 提交
-            // ajax
+            // this.loadingShow()
+            this.postData(`/truck?access-token=${accessToken}`, this.formData, data => {
+                // this.formData = data.data.data;
+                let datas = data.data.data;
+                this.submitActive = true;
+                // this.loadingHide()
+                if (data.ok) {
+                    if (data.data.status != 0) {
+                        for (let i in datas) {
+                            if (datas[i] instanceof Array) {
+                                this.toast(datas[i][0]);
+                            }else{
+                                this.toast(datas[i]);
+                            }
+                            return false;
+                        }
+                    }else{
+                        // 提交成功
+                        this.toast('提交成功');
+                        setTimeout(() => {
+                            // 跳转
+                        }, 500);
+                    }
+                }
+            })
         },
         // 右边弹出
         toggleFixed (active, type){
             if(active){
+                // 挂车无需选择
+                if (this.formData['cat_id'] == 100001 && type != 'cat_id') {
+                    this.toast('挂车无需选择');
+                    return false;
+                }
                 this.optionType = type;
                 this.inputType && this.$refs[this.inputType].blur();
                 this.options.letter = false;
@@ -426,6 +478,7 @@ export default {
                     }
                     this.optionTypeAjax();
                 }
+                // load之后显示，防止数据闪现
                 this.$nextTick(() => {
                     this.optionOpactiy = 1;
                 })
@@ -463,22 +516,32 @@ export default {
         // 车辆主要参数操作赋值
         optionTypes (id, name, next){
             // 车型匹配底部信息分类
-            if (this.optionType == 'cat_id') {
-                (this.truckType = truckTypeList[this.optionType][`c${id}`].type);
+            if (this.optionType == 'cat_id' && truckTypeList[this.optionType][`c${id}`]) {
+                this.truckType = truckTypeList[this.optionType][`c${id}`].type;
                 for (let i = 1; i < 16; i++) {
                     this.formData[`attr_${i}`] = null;
                 }
             }
             // 文字或ID
-            if(this.optionType == 'cat_id' || this.optionType == 'brand_id' || this.optionType == 'series_id'){
-                this.formData[this.optionType] = id;
-                this[`${this.optionType}_name`] = name;
+            if(this.mustNameArr.indexOf(this.optionType) !== -1){
+                // 专用车第一次不写入
+                if(name != '专用车'){
+                    this.formData[this.optionType] = id;
+                    this[`${this.optionType}_name`] = name;
+                }
             }else{
                 this.formData[this.optionType] = id;
             }
             // 是否关闭弹层
             if (!next) {
                 this.toggleFixed(false);
+                // 挂车
+                if (id == 100001) {
+                    this.formData['brand_id'] = null;
+                    this['brand_id_name'] = '挂车无需选择品牌';
+                    this.formData['series_id'] = null;
+                    this['series_id_name'] = '挂车无需选择车系';
+                }
             }else{
                 if (this.optionType == 'cat_id') {
                     this.ajaxId.subId = id;
@@ -499,42 +562,65 @@ export default {
         optionTypeAjax (){
             // this.loadingShow()
             if (this.ajaxIng) {
-                this.toast('正在请求...');
+                this.toast('正在请求');
                 return false;
             }
             // 品牌请求
             if (this.optionType == 'cat_id') {
                 this.ajaxIng = true;
-                this.getData(`/weex/brand?subId=${this.ajaxId.subId}`, data => {
-                    if (data.ok) {
-                        let list = {};
-                        let listData = data.data.data;
-                        for(let i = 0; i < listData.location.length; i++){
-                            list[i] = {
-                                index: listData.indexNav[i],
-                                data: []
+                if (this.ajaxId.subId == 4) {
+                    this.getData(`${this.api.truckUrl}getsubcateforcate&cateId=${this.ajaxId.subId}`, data => {
+                        if (data.ok) {
+                            let list = [];
+                            if (!data.data) {
+                                this.toast('该车系暂无数据');
+                                this.ajaxIng = false;
+                                return false;
                             }
-                            for(let j in listData.location[i]){
-                                list[i]['data'].push({
-                                    id: listData.location[i][j].F_BrandId,
-                                    name: listData.location[i][j].F_BrandName,
+                            let listData = data.data.data;
+                            for(let i = 0; i < listData.length; i++){
+                                list.push({
+                                    id: listData[i].F_SubCategoryId,
+                                    name: listData[i].F_SubCategoryName,
                                     next: true
                                 })
                             }
+                            this.options.letter = false;
+                            this.options.data = list;
                         }
-                        this.options.letter = true;
-                        this.options.data = list;
-                        this.optionType = 'brand_id';
-                        // 存储一波请求数据
-                        truckTypeList[this.optionType] = list;
-                        // 置空下一级
-                        truckTypeList['series_id'] = null;
-                        // this.loadingHide()
-                        this.$nextTick(() => {
-                            this.ajaxIng = false;
-                        })
-                    }
-                });
+                    }, 'jsonp');
+                }else{
+                    this.getData(`/weex/brand?subId=${this.ajaxId.subId}`, data => {
+                        if (data.ok) {
+                            let list = {};
+                            let listData = data.data.data;
+                            for(let i = 0; i < listData.location.length; i++){
+                                list[i] = {
+                                    index: listData.indexNav[i],
+                                    data: []
+                                }
+                                for(let j in listData.location[i]){
+                                    list[i]['data'].push({
+                                        id: listData.location[i][j].F_BrandId,
+                                        name: listData.location[i][j].F_BrandName,
+                                        next: true
+                                    })
+                                }
+                            }
+                            this.options.letter = true;
+                            this.options.data = list;
+                            this.optionType = 'brand_id';
+                            // 存储一波请求数据
+                            truckTypeList[this.optionType] = list;
+                            // 置空下一级
+                            truckTypeList['series_id'] = null;
+                        }
+                    });
+                }
+                // this.loadingHide()
+                this.$nextTick(() => {
+                    this.ajaxIng = false;
+                })
             }
             // 车系请求
             if (this.optionType == 'brand_id') {
@@ -566,6 +652,34 @@ export default {
                     }
                 }, 'jsonp');
             }
+            // 发动机品牌
+            if (this.optionType == 'attr_1') {
+                this.ajaxIng = true;
+                this.getData(`/product/engine-brand`, data => {
+                    if (data.ok) {
+                        let list = [];
+                        if (!data.data) {
+                            this.toast('暂无发动机品牌或请求出错，请重试');
+                            this.ajaxIng = false;
+                            return false;
+                        }
+                        let listData = data.data.data;
+                        for(let i = 0; i < listData.length; i++){
+                            list.push({
+                                id: listData[i].F_BrandId,
+                                name: listData[i].F_BrandName
+                            })
+                        }
+                        this.options.letter = false;
+                        this.options.data = list;
+                        truckTypeList[this.optionType] = list;
+                        // this.loadingHide()
+                        this.$nextTick(() => {
+                            this.ajaxIng = false;
+                        })
+                    }
+                })
+            }
         },
         // 输入框赋值
         inputData (event, key){
@@ -588,6 +702,9 @@ export default {
                 delay: 0 //ms
             })
         }
+    },
+    created (){
+        // ...
     }
 }
 </script>
@@ -625,7 +742,10 @@ export default {
     line-height: 46px;
 }
 .upload-label-con{
-    padding: 20px 10px 0;
+    padding-top: 20px;
+    padding-right: 10px;
+    padding-bottom: 0px;
+    padding-left: 10px;
     flex-wrap: wrap;
 }
 .upload-label{
@@ -646,7 +766,10 @@ export default {
     background-color: #fff;
 }
 .form-title{
-    padding: 26px 20px 18px;
+    padding-top: 26px;
+    padding-right: 20px;
+    padding-bottom: 18px;
+    padding-left: 20px;
     color: #666666;
     background-color: #efeff4;
 }
@@ -655,12 +778,16 @@ export default {
     border-bottom-color: #dfdfdf;
     border-bottom-style: solid;
     align-items: center;
-    padding: 24px 20px 24px 0;
+    padding-top: 24px;
+    padding-right: 20px;
+    padding-bottom: 24px;
     margin-left: 20px;
     background-color: #fff;
 }
 .form-box-small{
-    padding: 20px 20px 20px 0;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
 }
 .icon{
     color: #dfdfdf;
@@ -681,7 +808,10 @@ export default {
     right: 0;
     bottom: 0;
     height: 128px;
-    padding: 20px;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
     background-color: #fff;
 }
 .submit-btn{
@@ -711,9 +841,15 @@ export default {
     background-color: #fff;
 }
 .right-option-type{
-    padding: 30px;
+    padding-top: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
     border-bottom-width: 1px;
     border-bottom-color: #dfdfdf;
     border-bottom-style: solid;
+}
+.must{
+    color: #d22425;
 }
 </style>

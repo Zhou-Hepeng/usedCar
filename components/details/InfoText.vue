@@ -1,5 +1,5 @@
 <template>
-  <div class="info">
+  <div class="info" v-if="detailData.title">
     <!-- 标题编号 -->
     <div class="front">
       <div class="front-info">
@@ -7,8 +7,9 @@
         <div class="status">
           <!-- 标签 -->
           <text class="user-type">{{identity}}</text>
-          <image class="shop-vip" src="https://tao.m.360che.com/m/images/vip.png"></image>
-          <image class="shop-protect" src="https://tao.m.360che.com/m/images/bao.png"></image>
+          <template v-for="item in icons">
+            <image class="icon-img" :src="item"></image>
+          </template>
           <text class="car-code">车源编号：{{detailData.code}}</text>
         </div>
         <text class="list-line"></text>
@@ -16,7 +17,7 @@
       <!-- 热度 -->
       <div class="hot-info">
         <text class="hot-title">热度指数</text>
-        <text class="hot-num">{{hot}}</text>
+        <text class="hot-num">{{detailData.statistics && detailData.statistics.hot}}</text>
       </div>
     </div>
     <!-- 售价 -->
@@ -37,7 +38,7 @@
 
 <script>
 export default {
-	props: ['detailData', 'hot'],
+	props: ['detailData'],
 	computed: {
 		identity() {
 			let i;
@@ -49,6 +50,18 @@ export default {
 				i = '商家';
 			}
 			return i;
+		},
+		icons() {
+			let a = [];
+			this.detailData.groups &&
+				this.detailData.groups.forEach(item => {
+					if (item === 1) {
+						a.push('https://tao.m.360che.com/m/images/vip.png');
+					} else if (item === 2) {
+						a.push('https://tao.m.360che.com/m/images/bao.png');
+					}
+				});
+			return a;
 		}
 	}
 };
@@ -97,7 +110,7 @@ export default {
     color: #904208;
     background-color: #ffdd62;
   }
-  .shop-vip,.shop-protect{
+  .icon-img{
     width: 32px;
     height: 32px;
     margin-right: 8px;

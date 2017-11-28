@@ -1,10 +1,11 @@
-let modal = weex.requireModule('modal')
-let dom = weex.requireModule('dom')
-let thaw = weex.requireModule('THAW')
-let navigator = weex.requireModule('navigator')
-let stream = weex.requireModule('stream')
-let animation = weex.requireModule('animation')
-let storage = weex.requireModule('storage')
+const modal = weex.requireModule('modal')
+const dom = weex.requireModule('dom')
+const thaw = weex.requireModule('THAW')
+const navigator = weex.requireModule('navigator')
+const stream = weex.requireModule('stream')
+const animation = weex.requireModule('animation')
+const storage = weex.requireModule('storage')
+const picker = weex.requireModule('picker');
 export default {
     methods: {
         alert(text) {
@@ -30,7 +31,7 @@ export default {
         //跳入到weex页面
         goWeexUrl(url) {
             navigator.push({
-                url: 'http://192.168.1.227:8080/dist/' + url + '.js',
+                url: 'http://192.168.1.186:8080/dist/' + url + '.js',
                 animated: 'true'
             }, () => {
 
@@ -92,7 +93,20 @@ export default {
         //拨打电话
         goCall(phone){
             thaw && thaw.onGoCall(phone);
-        }
+        },
+        pickLocation(){
+          picker.pick({
+            index:2,
+            items: [1, 2, 3, 4],//[[1, 2, 3, 4],[11,22,33,44],[111,222,333,444]],
+            height: "500px"
+          }, ret => {
+
+            if (ret.result == 'success') {
+                this.alert(ret.data)
+                // self.normalpickData = ret.data;
+            }
+          })
+        },
     },
     created() {
         //iconFont字体

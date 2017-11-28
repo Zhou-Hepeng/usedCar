@@ -1,24 +1,20 @@
 <template>
-  <div>
+  <div v-if="seller && groups">
     <text class="title-text">卖家信息</text>
-    <!-- 卖家联系方式 -->
-    <div class="list-li">
-      <image class="user-img" src="https://i.kcimg.cn/data/avatar/new/17/1757e1a63938378423be2d1098ffb207_big.jpg-80x80.jpg"></image>
-      <text class="user-name">{{seller.name}}</text>
-    </div>
     <!-- 带标签的联系方式 -->
     <div class="list-li">
       <div class="li-front">
-        <image class="user-img" src="https://i.kcimg.cn/data/avatar/new/17/1757e1a63938378423be2d1098ffb207_big.jpg-80x80.jpg"></image>
+        <image class="user-img" :src="seller.avatar"></image>
         <text class="user-name">{{seller.name}}</text>
-        <div class="status">
+        <div class="status" v-if="identity !== '个人'">
           <!-- 标签 -->
-          <text class="user-type">经纪人</text>
-          <image class="shop-vip" src="https://tao.m.360che.com/m/images/vip.png"></image>
-          <image class="shop-protect" src="https://tao.m.360che.com/m/images/bao.png"></image>
+          <text class="user-type">{{identity}}</text>
+          <template v-for="item in icons">
+            <image class="icon-img" :src="item"></image>
+          </template>
         </div>
       </div>
-      <div class="list-content" @click="goShop">
+      <div class="list-content" @click="goShop" v-if="identity !== '个人'">
         <text class="li-to-store">进入店铺</text>
         <text class="li-arrow" :style="{fontFamily:'icon',fontSize:'24px'}">&#xe604;</text>
       </div>
@@ -31,7 +27,7 @@
     </div>
 
     <!-- 带标签联系人 -->
-    <div class="list-li-more">
+    <!-- <div class="list-li-more">
       <text class="list-line"></text>
       <div class="company">
         <text class="gray-title">公司名称：</text>
@@ -41,17 +37,17 @@
         <text class="gray-title">联系人：</text>
         <text class="concat">{{seller.name}}</text>
       </div>
-    </div>
+    </div> -->
 
     <!-- 点击拨打电话和复制微信号按钮 -->
-    <div class="concat-btn">
+    <div class="concat-btn" v-if="seller.mobile || seller.wechat_id">
       <text class="list-line"></text>
       <div class="btn left-btn" @click="telPhone" v-if="seller.mobile && seller.mobile !== null">
         <div class="concat-phone">
           <text class="icon-phone" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe689;</text>
           <text class="phone">{{seller.mobile}}</text>
         </div>
-        <text class="ascription">归属地：</text>
+        <text class="ascription">归属地：{{seller.mobile_location}}</text>
       </div>
       <div class="btn right-btn" @click="copyInfo" v-if="seller.wechat_id && seller.wechat_id !== null">
         <div class="wx-concat">
@@ -68,7 +64,32 @@
 const clipboard = weex.requireModule('clipboard');
 const modal = weex.requireModule('modal');
 export default {
-	props: ['seller'],
+	props: ['seller', 'publisher', 'groups'],
+	computed: {
+		identity() {
+			let i;
+			if (this.publisher === 1) {
+				i = '个人';
+			} else if (this.publisher === 2) {
+				i = '经纪人';
+			} else if (this.publisher === 3) {
+				i = '商家';
+			}
+			return i;
+		},
+		icons() {
+			let a = [];
+			this.groups &&
+				this.groups.forEach(item => {
+					if (item === 1) {
+						a.push('https://tao.m.360che.com/m/images/vip.png');
+					} else if (item === 2) {
+						a.push('https://tao.m.360che.com/m/images/bao.png');
+					}
+				});
+			return a;
+		}
+	},
 	methods: {
 		goShop() {
 			// 进店看看
@@ -78,7 +99,7 @@ export default {
 		},
 		copyInfo() {
 			// 复制微信号
-			clipboard.setString('13795978018');
+			clipboard.setString(this.seller.wechat_id);
 			modal.toast({
 				message: '复制成功,请去微信添加好友',
 				duration: 1
@@ -159,7 +180,7 @@ export default {
     color: #904208;
     background-color: #ffdd62;
   }
-  .shop-vip,.shop-protect{
+  .icon-img{
     width: 32px;
     height: 32px;
     margin-right: 8px;
@@ -198,14 +219,16 @@ export default {
     width: 720px;
     height: 2px;
     background-color: #eee;
+    z-index: 10;
   }
   .concat-btn{
     position: relative;
     flex-direction: row;
-    min-height: 50px;
+    height: 100px;
     align-items: center;
   }
   .btn{
+    height: 98px;
     flex: 1;
     padding-top: 12px;
     padding-bottom: 14px;
@@ -213,6 +236,9 @@ export default {
   }
   .left-btn{
     background-color: #EE6E47;
+  }
+  .right-btn{
+    background-color: #fff;
   }
   .concat-phone,.wx-concat{
     flex-direction: row;

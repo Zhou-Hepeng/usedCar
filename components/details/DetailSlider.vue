@@ -1,19 +1,19 @@
 <template>
     <div>
       <div class="show-mask" v-if="showMask" @click="closeMask">
-        <slider class="mask-slider">
-          <div class="slider-img" v-for="(photo,index) in photos" :index="SelectIndex" :key="index">
-            <image class="mask-img" :src="photo.uri" @load="onload" :style="`width:${photo.width}px;height:${photo.height}px`"></image>
-            <text class="indicator">{{photo.pos}}/{{photos.length}}</text>
+        <slider class="mask-slider" :index="SelectIndex">
+          <div class="slider-img" v-for="(photo,index) in photos.photos" :key="`mask_${index}`">
+            <image class="mask-img" resize="cover" :src="imgUrl + photo.uri" @load="onload" :style="`width:${photo.width}px;height:${photo.height}px`"></image>
+            <text class="indicator">{{photo.pos}}/{{photos.photos.length}}</text>
           </div>
         </slider>
       </div>
       <div>
         <slider class="slider" interval="3000" auto-play="true">
-          <div class="frame" v-for="(photo,index) in photos" :key="index" @click="showInfo(index)">
+          <div class="frame" v-for="(photo,index) in photos.photos" :key="`frame_${index}`" @click="showInfo(index)">
             <image class="image" resize="cover" :src="imgUrl + photo.uri"></image>
-            <text class="indicator">{{photo.pos}}/{{photos.length}}</text>
-            <text class="photo-text">江西 九江市 2017-05-22发布</text>
+            <text class="indicator">{{photo.pos}}/{{photos.photos.length}}</text>
+            <text class="photo-text">{{photos.province}} {{format(photos.creatTime)}}发布</text>
           </div>
         </slider>
       </div>
@@ -26,7 +26,7 @@ export default {
 	data() {
 		return {
 			showMask: false,
-			SelectIndex: 0,
+			SelectIndex: -1,
 			imgUrl: 'http://img7.kcimg.cn/'
 		};
 	},
@@ -37,10 +37,23 @@ export default {
 		},
 		closeMask() {
 			this.showMask = false;
+			this.SelectIndex = -1;
 		},
 		onload(e) {
 			console.log(e, 'onload');
 			this.event = e;
+		},
+		zero(m) {
+			// ＜10 + 0
+			return m < 10 ? '0' + m : m;
+		},
+		format(t) {
+			//t是整数，否则要parseInt转换
+			let time = new Date(t * 1000);
+			let y = time.getFullYear();
+			let m = time.getMonth() + 1;
+			let d = time.getDate();
+			return `${y}-${this.zero(m)}-${this.zero(d)}`;
 		}
 	}
 };

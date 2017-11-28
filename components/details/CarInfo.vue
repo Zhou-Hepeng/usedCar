@@ -1,41 +1,7 @@
 <template>
-  <div class="car-info">
+  <div class="car-info" v-if="carInfoData.configs">
     <text class="title-text">车辆档案</text>
-    <!-- 品牌 -->
-    <div class="list-li">
-      <text class="gray-title">品牌：</text>
-      <text class="text-info">{{carInfoData.brand}}</text>
-    </div>
-    <!-- 车系 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">车系：</text>
-      <text class="text-info">{{carInfoData.series}}</text>
-    </div>
-    <!-- 车型 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">车型：</text>
-      <text class="text-info">徐工 漢风重卡 430马力 6X4牵引车(NXG4251D4WC)徐工 漢风重卡 430马力 6X4牵引车(NXG4251D4WC)</text>
-    </div>
-    <!-- 上牌时间 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">上牌时间：</text>
-      <text class="text-info">{{format(carInfoData.reg_date)}}</text>
-    </div>
-    <!-- 公里数 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">公里数：</text>
-      <text class="text-info">{{carInfoData.mileage}}万公里</text>
-    </div>
-    <!-- 发动机品牌 -->
-    <!-- 排放标准 -->
-    <!-- 变速箱档位 -->
-    <!-- 驱动形式 -->
-    <!-- 马力 -->
-    <!-- 后桥速比 -->
+    <!-- 各个参数渲染 -->
     <template v-for="item in carInfoData.configs">
       <car-config :configs="item"></car-config>
     </template>
@@ -45,19 +11,14 @@
       <text class="gray-title">VIN码后六位：</text>
       <text class="text-info">000000</text>
     </div> -->
-    <!-- 交强险过期时间 -->
-    <div class="list-li">
-      <text class="list-line"></text>
-      <text class="gray-title">交强险过期时间：</text>
-      <text class="text-info">{{format(carInfoData.compulsory_expiry)}}</text>
-    </div>
     <!-- 车辆描述 -->
-    <div class="list-li">
+    <div class="list-li" v-if="carInfoData.extra">
       <text class="list-line"></text>
       <text class="gray-title">车辆描述：</text>
-      <text class="text-area" v-if="!moreData">几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售</text>
-      <text :class="['text-area', textMoreInfo]" v-else>几乎新车，目前全国各地正常运营，需要看车的要提前预约。另有轿运车车挂，可以一并出售</text>
+      <text class="text-area" v-if="!moreData">{{carInfoData.extra.introduction ? carInfoData.extra.introduction : '暂无描述'}}</text>
+      <text :class="['text-area', textMoreInfo]" v-else>{{carInfoData.extra.introduction ? carInfoData.extra.introduction : '暂无描述'}}</text>
     </div>
+    <!-- 查看更多 -->
     <div class="look-more" @click="lookMore">
       <text class="more">{{moreText}}</text>
       <text :class="['arrow',arrowClass]" :style="{fontFamily:'icon',fontSize:'24px'}">&#xe601;</text>

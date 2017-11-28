@@ -1,4 +1,6 @@
 <template>
+    <div>
+    <my-goback title="申请经纪人"></my-goback>
     <scroller class="container">
         <div class="form-box-con" :style="{marginBottom:'30px'}">
             <div class="form-box flex">
@@ -7,7 +9,7 @@
             </div>
             <div class="form-box flex">
                 <text class="label">所在城市</text>
-                <text class="input box-flex text-right"></text>
+                <text class="input box-flex text-right" @click="pickLocationShow"></text>
                 <text class="icon" :style="{fontFamily:'icon', fontSize:'28px', transform: 'translateX(4px)'}">&#xe604;</text>
             </div>
             <div class="form-box flex">
@@ -58,55 +60,81 @@
             </div>
         </div>
     </scroller>
+    <pick-location :pickShow="pickShow" @pickLocationShow="pickLocationShow" @submitLocation="submitLocation"></pick-location>
+</div>
 </template>
 
 <script>
 import mixins from '../mixins/mixins'
 Vue.mixin(mixins)
+let picker = weex.requireModule('picker')
+
+import MyGoback from '../components/my/MyGoback.vue';
+import pickLocation from '../components/pickLocation.vue';
 
 export default {
-    data (){
-        return {
-            switchType: false,
-            wechat: '',
-            codeText: '获取验证码',
-            timer: null,
-            time: 90,
-            codeActive: true,
-            submitActive: true
-        }
-    },
-    methods: {
-        // 微信同号按钮
-        switchChange (event){
-            this.switchType = event.value;
-        },
-        // 手机号输入同步至微信
-        mobileChange (event){
-            this.wechat = event.value;
-        },
-        code (){
-            // ajax
-            this.codeActive != 'active' && this.codeInterval();
-        },
-        // 倒计时
-        codeInterval (){
-            this.codeActive = 'active';
-            this.timer = setInterval(() => {
-                this.time < 1 ? 
-                (this.time = 90, clearInterval(this.timer), this.codeActive = true, this.codeText = '获取验证码') : 
-                (this.time--, this.codeText = `${this.time}秒后重新获取`);
-            }, 1000)
-        },
-        // 提交
-        submit (){
-            if (this.submitActive == 'active'){
-                return false;
-            }
-            this.submitActive = 'active';
-            // 提交
-        }
+  components: {
+      MyGoback,
+      pickLocation
+  },
+  data (){
+    return {
+      switchType: false,
+      wechat: '',
+      codeText: '获取验证码',
+      timer: null,
+      time: 90,
+      codeActive: true,
+      submitActive: true,
+      //是否显示选择地区
+      pickShow:true,
     }
+  },
+  methods: {
+    // 微信同号按钮
+    switchChange (event){
+      this.switchType = event.value;
+    },
+    // 手机号输入同步至微信
+    mobileChange (event){
+      this.wechat = event.value;
+    },
+    code (){
+      // ajax
+      this.codeActive != 'active' && this.codeInterval();
+    },
+    // 倒计时
+    codeInterval (){
+      this.codeActive = 'active';
+      this.timer = setInterval(() => {
+        this.time < 1 ?
+        (this.time = 90, clearInterval(this.timer), this.codeActive = true, this.codeText = '获取验证码') :
+        (this.time--, this.codeText = `${this.time}秒后重新获取`);
+      }, 1000)
+    },
+    // 提交
+    submit (){
+      if (this.submitActive == 'active'){
+        return false;
+      }
+      this.submitActive = 'active';
+      // 提交
+    },
+    //选择时间
+    pickDate () {
+      picker.pickDate({
+        value: this.value
+      }, event => {
+        if (event.result === 'success') {
+          this.value = event.data
+        }
+      })
+    },
+    //显示 || 隐藏选择地区
+    pickLocationShow(){
+      this.pickShow = !this.pickShow
+    }
+  }
 }
 </script>
 
@@ -144,12 +172,16 @@ export default {
     border-bottom-color: #dfdfdf;
     border-bottom-style: solid;
     align-items: center;
-    padding: 24px 20px 24px 0;
+    padding-top:24px;
+    padding-bottom:24px;
+    padding-right:20px;
     margin-left: 20px;
     background-color: #fff;
 }
 .form-box-small{
-    padding: 20px 20px 20px 0;
+    padding-top:20px;
+    padding-right:20px;
+    padding-bottom:20px;
 }
 .icon{
     color: #dfdfdf;
@@ -161,7 +193,10 @@ export default {
 /*获取验证码*/
 .code-btn{
     width: 220px;
-    padding: 15px 10px;
+    padding-top:15px;
+    padding-right:10px;
+    padding-bottom:15px;
+    padding-left:10px;
     background-color: #09bb07;
 }
 .code-active{
@@ -174,7 +209,10 @@ export default {
 }
 /*上传*/
 .upload-label-con{
-    padding: 30px 20px;
+    padding-top:30px;
+    padding-right:20px;
+    padding-bottom:30px;
+    padding-left:20px;
 }
 .upload-label{
     height: 152px;
@@ -197,7 +235,10 @@ export default {
     right: 0;
     bottom: 0;
     height: 128px;
-    padding: 20px;
+    padding-top:20px;
+    padding-right:20px;
+    padding-bottom:20px;
+    padding-left:20px;
     background-color: #fff;
 }
 .submit-btn{
@@ -211,4 +252,5 @@ export default {
 .submit-btn-active{
     background-color: #ccc;
 }
+
 </style>

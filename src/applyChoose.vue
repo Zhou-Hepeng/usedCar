@@ -1,38 +1,43 @@
 <template>
-    <div class="apply-container">
-        <div class="apply-choose" @click="jump('')">
-            <image class="image" :src="imageUrl + 'm/images/geti.png'"></image>
-            <div class="content">
-                <text class="title">个体性质</text>
-                <text class="info">我是二手车经纪人，没有实体公司</text>
+    <div>
+        <MyGoback title="商家申请-类型选择"></MyGoback>
+        <div class="apply-container">
+            <div class="apply-choose" @click="goWeexUrl('intermediaryApply')">
+                <image class="image" :src="imageUrl + 'm/images/geti.png'"></image>
+                <div class="content">
+                    <text class="title">个体性质</text>
+                    <text class="info">我是二手车经纪人，没有实体公司</text>
+                </div>
+                <text class="icon" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe604;</text>
             </div>
-            <text class="icon" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe604;</text>
-        </div>
-        <div class="apply-choose" @click="jump('')">
-            <image class="image" :src="imageUrl + 'm/images/gongsi.png'"></image>
-            <div class="content">
-                <text class="title">公司性质</text>
-                <text class="info">我是二手车车商，有实体公司</text>
+            <div class="apply-choose" @click="goWeexUrl('sellerApply')">
+                <image class="image" :src="imageUrl + 'm/images/gongsi.png'"></image>
+                <div class="content">
+                    <text class="title">公司性质</text>
+                    <text class="info">我是二手车车商，有实体公司</text>
+                </div>
+                <text class="icon" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe604;</text>
             </div>
-            <text class="icon" :style="{fontFamily:'icon',fontSize:'28px'}">&#xe604;</text>
         </div>
     </div>
+
 </template>
 
 <script>
 import mixins from '../mixins/mixins'
 Vue.mixin(mixins)
+import MyGoback from '../components/my/MyGoback.vue';
 
 export default {
+    components: {
+        MyGoback
+    },
     data (){
         return {
             imageUrl: 'https://tao.m.360che.com/',
         }
     },
     methods: {
-        jump (url){
-            this.goWeexUrl(url);
-        }
     }
 }
 </script>
